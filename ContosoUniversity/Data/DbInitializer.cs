@@ -61,6 +61,7 @@ namespace ContosoUniversity.Data
                 new Enrollment{StudentID=5,CourseID=6323,Grade=Grade.Fucked},
                 new Enrollment{StudentID=6,CourseID=1234,Grade=Grade.Eeeehmazing},
                 new Enrollment{StudentID=7,CourseID=1060,Grade=Grade.Cool},
+                new Enrollment{StudentID=7,CourseID=6900,Grade=Grade.Boom},
             };
             foreach (Enrollment e in enrollments)
             {
