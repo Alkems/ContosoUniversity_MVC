@@ -2,7 +2,7 @@
 {
     public enum Grade
     {
-        A, B, C, D, F
+        Eeeehmazing, Boom, Cool, Dam, Fucked
     }
     public class Enrollment
     {
