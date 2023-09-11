@@ -32,6 +32,11 @@ namespace ContosoUniversity.Data
             }
             context.SaveChanges();
 
+            var instructors = new Instructor[]
+            {
+                new Instructor {FirstMidName = "Magnus", LastName = "Carlsen" }
+            };
+
             var courses = new Course[]
             {
                 new Course() {CourseID=1050,Title="Gotham",Credits=160},
