@@ -34,7 +34,41 @@ namespace ContosoUniversity.Data
 
             var instructors = new Instructor[]
             {
-                new Instructor {FirstMidName = "Magnus", LastName = "Carlsen" }
+                new Instructor {FirstMidName = "Magnus", LastName = "Carlsen", HireDate = DateTime.Parse("40-09-11")},
+                new Instructor {FirstMidName = "Father", LastName = "Christmas", HireDate = DateTime.Parse("44-09-11")},
+                new Instructor {FirstMidName = "Black", LastName = "Jesus", HireDate = DateTime.Parse("0-09-11")}
+            };
+            foreach (Instructor i in instructors)
+            {
+                context.Instructors.Add(i);
+            }
+            context.SaveChanges();
+
+            var departments = new Department[]
+            {
+                new Department
+                {
+                    Name = "Money Laundering",
+                    Budget = 20000,
+                    StartDate = DateTime.Parse("2001-09-11"),
+                    InstructorID = instructors.Single(i => i.LastName == "Jesus").Id
+                },
+
+                new Department
+                {
+                    Name = "Cartel",
+                    Budget = 300000,
+                    StartDate = DateTime.Parse("2001-09-11"),
+                    InstructorID = instructors.Single(i => i.LastName == "Christmas").Id
+                },
+
+                new Department
+                {
+                    Name = "Counter chess cheating",
+                    Budget = 1,
+                    StartDate = DateTime.Parse("2001-09-11"),
+                    InstructorID = instructors.Single(i => i.LastName == "Carlsen").Id
+                },
             };
 
             var courses = new Course[]
