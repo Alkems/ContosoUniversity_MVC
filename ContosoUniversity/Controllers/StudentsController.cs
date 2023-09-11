@@ -83,7 +83,7 @@ namespace ContosoUniversityTARpe21.Controllers
             {
                 return NotFound();
             }
-            var studentToUpdate = await _context.Students.FirstOrDefaultAsync(s => s.ID == id);
+            var studentToUpdate = await _context.Students.FirstOrDefaultAsync(s => s.Id == id);
             if (await TryUpdateModelAsync<Student>(studentToUpdate, "", s => s.FirstMidName,
                 s => s.LastName, s => s.EnrollmentDate))
             {

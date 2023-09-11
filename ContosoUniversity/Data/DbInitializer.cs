@@ -70,6 +70,11 @@ namespace ContosoUniversity.Data
                     InstructorID = instructors.Single(i => i.LastName == "Carlsen").Id
                 },
             };
+            foreach (Department d in departments)
+            {
+                context.Departments.Add(d);
+            }
+            context.SaveChanges();
 
             var courses = new Course[]
             {
@@ -85,6 +90,53 @@ namespace ContosoUniversity.Data
             foreach(Course c in courses)
             {
                 context.Courses.Add(c);
+            }
+            context.SaveChanges();
+
+            var officeAssignments = new OfficeAssignment[]
+            {
+                new OfficeAssignment()
+                {
+                    InstructorID = instructors.Single(i => i.LastName == "Jesus").Id,
+                        Location = "✈💥🏢🏢🔥",
+                },
+
+                new OfficeAssignment()
+                {
+                    InstructorID = instructors.Single(i => i.LastName == "Christmas").Id,
+                        Location = "Hell",
+                },
+
+                new OfficeAssignment()
+                {
+                    InstructorID = instructors.Single(i => i.LastName == "Jesus").Id,
+                        Location = "O Block",
+                },
+            };
+            foreach (OfficeAssignment o in officeAssignments)
+            {
+                context.OfficeAssignments.Add(o);
+            }
+            context.SaveChanges();
+
+            var courseInstructors = new CourseAssignment[]
+            {
+                new CourseAssignment
+                {
+                    CourseID = courses.Single(c => c.Title == "Jail").CourseID,
+                    InstructorID = instructors.Single(i => i.LastName == "Jesus").Id
+                },
+
+                new CourseAssignment
+                {
+                    CourseID = courses.Single(c => c.Title == "Gotham").CourseID,
+                    InstructorID = instructors.Single(i => i.LastName == "Christmas").Id
+                }
+            };
+
+            foreach (CourseAssignment ci in courseInstructors)
+            {
+                context.CourseAssignments.Add(ci);
             }
             context.SaveChanges();
 
