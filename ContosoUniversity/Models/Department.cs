@@ -9,7 +9,7 @@ namespace ContosoUniversity.Models
         [StringLength(50, MinimumLength = 2)]
 
         public int Budget { get; set; }
-
+        [StringLength(50, MinimumLength = 3)]
         public string Name { get; set; }
         [DataType(DataType.Currency)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}",

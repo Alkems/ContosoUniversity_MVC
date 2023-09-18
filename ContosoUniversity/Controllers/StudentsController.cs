@@ -39,7 +39,7 @@ namespace ContosoUniversityTARpe21.Controllers
         {
             return View();
         }
-        [HttpPost]
+        [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("EnrollmentDate,FirstMidName,LastName")] Student student)
         {

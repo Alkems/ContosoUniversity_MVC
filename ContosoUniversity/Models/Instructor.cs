@@ -18,7 +18,14 @@ namespace ContosoUniversity.Models
         [Column("FirstName")]
         [Display(Name = "First Name")]
         public string FirstMidName { get; set; }
-        public string FullName { get { return LastName + ", " + FirstMidName; } }
+
+        [Display(Name = "Full Name")]
+        public string FullName
+        {
+            get
+            { return LastName + ", " + FirstMidName; }
+        }
+
         [DataType(DataType.DateTime)]
         [Display(Name = "Hire Date")]
         public DateTime HireDate { get; set; }
