@@ -18,11 +18,11 @@ namespace ContosoUniversity.Controllers
             var vm = new InstructorIndexData();
             vm.Instructors = await _context.Instructors
                 .Include(i => i.OfficeAssignment)
-                .Include(i => i.CourseAssignments)
+                .Include(i => i.CourseAssignment)
                 .ThenInclude(i => i.Course)
                 .ThenInclude(i => i.Enrollments)
                 .ThenInclude(i => i.Student)
-                .Include(i => i.CourseAssignments)
+                .Include(i => i.CourseAssignment)
                 .ThenInclude(i => i.Course)
                 .ThenInclude(i => i.Department)
                 .AsNoTracking()
@@ -33,12 +33,12 @@ namespace ContosoUniversity.Controllers
                 ViewData["InstructorId"] = id.Value;
                 Instructor instructor = vm.Instructors
                     .Where(i => i.Id == id.Value).Single();
-                vm.Courses = instructor.CourseAssignments
+                vm.Courses = instructor.CourseAssignment
                     .Select(i => i.Course);
             }
             if (courseId != null)
             {
-                ViewData["CourseID"] = courseId.Value;
+                ViewData["CourseId"] = courseId.Value;
                 vm.Enrollments = vm.Courses
                     .Where(x => x.CourseID == courseId)
                     .Single()
@@ -66,7 +66,7 @@ namespace ContosoUniversity.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("HireDate,FirstName,LastName")] Instructor instructor)
+        public async Task<IActionResult> Create([Bind("HireDate,FirstMidName,LastName")] Instructor instructor)
         {
             try
             {

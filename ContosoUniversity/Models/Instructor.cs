@@ -29,7 +29,7 @@ namespace ContosoUniversity.Models
         [DataType(DataType.DateTime)]
         [Display(Name = "Hire Date")]
         public DateTime HireDate { get; set; }
-        public ICollection<CourseAssignment> CourseAssignments { get; set; }
-        public OfficeAssignment OfficeAssignment { get; set; }
+        public ICollection<CourseAssignment>? CourseAssignment { get; set; }
+        public OfficeAssignment? OfficeAssignment { get; set; }
     }
 }

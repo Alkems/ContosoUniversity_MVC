@@ -123,6 +123,28 @@ namespace ContosoUniversityTARpe21.Controllers
             }
             return View(student);
         }
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var student = await _context.Students.FindAsync(id);
+            if (student == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            try
+            {
+                _context.Students.Remove(student);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+
+            }
+            catch (DbUpdateException)
+            {
+
+                return RedirectToAction(nameof(Delete), new { id = id, saveChangesError = true });
+            }
+        }
 
     }
 
