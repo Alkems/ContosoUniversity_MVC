@@ -27,9 +27,35 @@
         <dt class="col-sm-2">
             @Html.DisplayFor(model => model.HireDate)
         </dt>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.OfficeAssignment)
+        </dt>
+        @{
+            if (Model.OfficeAssignment != null)
+            {
+                foreach (var item in Model.CourseAssignment)
+                {
+                    <td>
+                        @Html.DisplayFor(model => model.OfficeAssignment.Location)
+                    </td>
+                }
+            }
+        }
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CourseAssignment)
+        </dt>
+        <dt>
+            @{
+                foreach (var item in Model.CourseAssignment)
+                {
+                    <td>
+                        @Html.DisplayFor(model => item.CourseID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => item.Course)
+                    </td>
+                }
+            }
+        </dt>
     </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-    <a asp-action="Index">Back to List</a>
 </div>
