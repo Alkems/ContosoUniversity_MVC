@@ -279,8 +279,7 @@ namespace ContosoUniversity.Migrations
                 {
                     b.Navigation("CourseAssignment");
 
-                    b.Navigation("OfficeAssignment")
-                        .IsRequired();
+                    b.Navigation("OfficeAssignment");
                 });
 
             modelBuilder.Entity("ContosoUniversity.Models.Student", b =>
