@@ -13,11 +13,32 @@ namespace ContosoUniversity.Controllers
         {
             _context = context;
         }
-        // get index
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            var courses = _context.Courses.Include(c => c.Department).ToList();
-            return View(courses);
+            var courses = await _context.Courses
+                .Include(c => c.Department)
+                .ToListAsync();
+            var courseViewModels = new List<CourseViewModel>();
+            foreach (var course in courses)
+            {
+                var courseViewModel = new CourseViewModel
+                {
+                    course = course,
+                    assignedInstructors = await _context.CourseAssignments
+                        .Where(ca => ca.CourseID == course.CourseID)
+                        .Select(ca => ca.Instructor)
+                        .ToListAsync(),
+                    assignedStudents = await _context.Enrollments
+                        .Where(ca => ca.CourseID == course.CourseID)
+                        .Select(ca => ca.Student)
+                        .ToListAsync(),
+                };
+                courseViewModels.Add(courseViewModel);
+            }
+
+            // Pass the list of CourseViewModels to the view
+            return View(courseViewModels);
         }
 
         // get details

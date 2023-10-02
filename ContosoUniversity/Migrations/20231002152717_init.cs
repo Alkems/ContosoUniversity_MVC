@@ -83,7 +83,8 @@ namespace ContosoUniversity.Migrations
                 name: "Course",
                 columns: table => new
                 {
-                    CourseID = table.Column<int>(type: "int", nullable: false),
+                    CourseID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Credits = table.Column<int>(type: "int", nullable: false),
                     DepartmentID = table.Column<int>(type: "int", nullable: false)
