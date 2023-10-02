@@ -45,11 +45,11 @@ namespace ContosoUniversity.Migrations
                 {
                     DepartmentID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Budget = table.Column<int>(type: "int", maxLength: 50, nullable: false),
+                    Budget = table.Column<decimal>(type: "Money", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     InstructorID = table.Column<int>(type: "int", nullable: true),
-                    RowVersion = table.Column<byte>(type: "tinyint", rowVersion: true, nullable: false)
+                    RowVersion = table.Column<byte>(type: "tinyint", rowVersion: true, nullable: true)
                 },
                 constraints: table =>
                 {

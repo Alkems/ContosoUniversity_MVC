@@ -41,7 +41,7 @@ namespace ContosoUniversity.Controllers
         // get create
         public IActionResult Create()
         {
-            ViewData["InstructorID"] = new SelectList(_context.Instructors, "ID", "FullName");
+            ViewData["InstructorID"] = new SelectList(_context.Instructors, "Id", "FullName");
             return View();
         }
         // post create
@@ -51,6 +51,7 @@ namespace ContosoUniversity.Controllers
         {
             ModelState.Remove("Courses");
             ModelState.Remove("Administrator");
+
             if (ModelState.IsValid)
             {
                 _context.Add(department);
@@ -58,7 +59,7 @@ namespace ContosoUniversity.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["InstructorID"] = new SelectList(_context.Instructors, "ID", "FullName", department.InstructorID);
+            ViewData["InstructorID"] = new SelectList(_context.Instructors, "Id", "FullName", department.InstructorID);
             return View(department);
         }
         // get edit
@@ -73,11 +74,12 @@ namespace ContosoUniversity.Controllers
                 .Include(i => i.Administrator)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.DepartmentID == id);
+
             if (department == null)
             {
                 return NotFound();
             }
-            ViewData["InstructorID"] = new SelectList(_context.Instructors, "ID", "FullName", department.InstructorID);
+            ViewData["InstructorID"] = new SelectList(_context.Instructors, "Id", "FullName", department.InstructorID);
             return View(department);
         }
         // post edit
@@ -85,6 +87,9 @@ namespace ContosoUniversity.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int? id, byte[] rowVersion)
         {
+            ModelState.Remove("Courses");
+            ModelState.Remove("Administrator");
+            ModelState.Remove("RowVersion");
             if (id == null)
             {
                 return NotFound();
@@ -97,13 +102,14 @@ namespace ContosoUniversity.Controllers
                 Department deletedDepartment = new Department();
                 await TryUpdateModelAsync(deletedDepartment);
                 ModelState.AddModelError(string.Empty, "unable to save changes. The department was deleted by another user.");
-                ViewData["InstructorID"] = new SelectList(_context.Instructors, "ID", "FullName", deletedDepartment.InstructorID);
+                ViewData["InstructorID"] = new SelectList(_context.Instructors, "Id", "FullName", deletedDepartment.InstructorID);
                 return View(deletedDepartment);
             }
 
             _context.Entry(departmentToUpdate).Property("RowVersion").OriginalValue = rowVersion;
 
-            if (await TryUpdateModelAsync<Department>(departmentToUpdate, "", s => s.Name, s => s.StartDate, s => s.Budget, s => s.InstructorID))
+            var tryUpdate = await TryUpdateModelAsync<Department>(departmentToUpdate, "", s => s.Name, s => s.StartDate, s => s.Budget, s => s.InstructorID);
+            if (tryUpdate)
             {
                 try
                 {
@@ -141,7 +147,7 @@ namespace ContosoUniversity.Controllers
                             ModelState.AddModelError("InstructorID", $"Current value: {databaseValues.InstructorID}");
                         }
                         ModelState.AddModelError(string.Empty, "The record you attempted to edit "
-                            + "was modified by another user after you got the original error value. The "
+                            + "was modified by another user after you got the original value. The "
                             + "edit operation was cancelled and the current values in the database "
                             + "have been displayed. If you still want to edit this record. Click "
                             + "the Save button again. Otherwise click the Back to List hyperlink.");

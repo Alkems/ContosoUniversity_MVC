@@ -75,9 +75,8 @@ namespace ContosoUniversity.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DepartmentID"), 1L, 1);
 
-                    b.Property<int>("Budget")
-                        .HasMaxLength(50)
-                        .HasColumnType("int");
+                    b.Property<decimal>("Budget")
+                        .HasColumnType("Money");
 
                     b.Property<int?>("InstructorID")
                         .HasColumnType("int");
@@ -87,7 +86,7 @@ namespace ContosoUniversity.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<byte>("RowVersion")
+                    b.Property<byte?>("RowVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("tinyint");

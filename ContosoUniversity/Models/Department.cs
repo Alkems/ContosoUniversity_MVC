@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 
 namespace ContosoUniversity.Models
@@ -6,14 +7,18 @@ namespace ContosoUniversity.Models
     public class Department
     {
         public int DepartmentID { get; set; }
-        [StringLength(50, MinimumLength = 2)]
 
+
+        [DataType(DataType.Currency)]
+        [Column(TypeName = "Money")]
         public int Budget { get; set; }
+
         [StringLength(50, MinimumLength = 3)]
         public string Name { get; set; }
-        [DataType(DataType.Currency)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}",
-            ApplyFormatInEditMode = true)]
+
+
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime StartDate { get; set; }
         public int? InstructorID { get; set; }
         [Timestamp]
