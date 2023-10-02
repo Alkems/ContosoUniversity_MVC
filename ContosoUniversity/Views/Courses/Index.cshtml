@@ -23,6 +23,9 @@
             <th>
                 Instructors
             </th>
+            <th>
+                Student Count
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -46,6 +49,9 @@
                             @instructor.FullName @:<br>
                         }
                     }
+                </td>
+                <td>
+                    @item.assignedStudents.Count()
                 </td>
 
                 <td>
