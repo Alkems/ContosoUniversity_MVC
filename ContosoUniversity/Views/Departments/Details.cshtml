@@ -1,4 +1,5 @@
 ﻿@model ContosoUniversity.Models.Department
+
 @{
     ViewData["Title"] = "Details";
 }
@@ -6,32 +7,38 @@
 <h1>Details</h1>
 <div>
     <h4>Department</h4>
-    <hr/>
+    <hr />
     <dl class="row">
-        <dt>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
         </dt>
-        <dt>
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Name)
-        </dt>
-        <dt>
+        </dd>
+
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Budget)
         </dt>
-        <dt>
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Budget)
-        </dt>
-        <dt>
+        </dd>
+
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.StartDate)
         </dt>
-        <dt>
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.StartDate)
-        </dt>
-        <dt>
+        </dd>
+
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Administrator)
         </dt>
-        <dt>
-            @Html.DisplayFor(model => model.Administrator.FullName)
-        </dt>
+        <dd class="col-sm-10">
+            @if (Model.Administrator != null)
+            {
+                @Html.DisplayFor(model => model.Administrator.FullName)
+            }
+        </dd>
     </dl>
 </div>
 <div>

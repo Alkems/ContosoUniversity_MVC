@@ -5,6 +5,7 @@
 }
 
 <h1>Details</h1>
+
 <div>
     <h4>Instructor</h4>
     <hr />
@@ -12,50 +13,66 @@
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.LastName)
         </dt>
-        <dt class="col-sm-2">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.LastName)
-        </dt>
+        </dd>
+
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.FirstMidName)
         </dt>
-        <dt class="col-sm-2">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.FirstMidName)
-        </dt>
+        </dd>
+
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.HireDate)
         </dt>
-        <dt class="col-sm-2">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.HireDate)
-        </dt>
+        </dd>
+
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.OfficeAssignment)
         </dt>
-        @{
-            if (Model.OfficeAssignment != null)
+        <dd class="col-sm-10">
+            @if (Model.OfficeAssignment != null)
             {
-                foreach (var item in Model.CourseAssignment)
-                {
-                    <td>
-                        @Html.DisplayFor(model => model.OfficeAssignment.Location)
-                    </td>
-                }
+                @Html.DisplayFor(model => model.OfficeAssignment.Location)
             }
-        }
+            else
+            {
+                <span>N/A</span>
+            }
+        </dd>
+
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CourseAssignment)
+            Courses Assigned
         </dt>
-        <dt>
-            @{
-                foreach (var item in Model.CourseAssignment)
-                {
-                    <td>
-                        @Html.DisplayFor(model => item.CourseID)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(model => item.Course)
-                    </td>
-                }
+        <dd class="col-sm-10">
+            @if (Model.CourseAssignment != null && Model.CourseAssignment.Any())
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Course ID</th>
+                            <th>Course Title</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var assignment in Model.CourseAssignment)
+                        {
+                            <tr>
+                                <td>@assignment.CourseID</td>
+                                <td>@assignment.Course.Title</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             }
-        </dt>
+            else
+            {
+                <span>No courses assigned</span>
+            }
+        </dd>
     </dl>
 </div>
