@@ -13,7 +13,7 @@
             <th>Last Name |</th>
             <th>First Name |</th>
             <th>Hire Date |</th>
-            <th>Office |</th>
+            <th>Office Location |</th>
             <th>Courses</th>
             <th></th>
         </tr>
@@ -46,7 +46,7 @@
                     @{
                         foreach (var courses in item.CourseAssignment)
                         {
-                            @courses.Course.CourseID @: @courses.Course.Title <br /> |
+                            @courses.Course.Title <br />
                         }
                     }
                 </td>

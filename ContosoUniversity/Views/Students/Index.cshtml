@@ -21,6 +21,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.EnrollmentDate)
             </th>
+            <th>
+                Enrollments
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -36,6 +39,15 @@
             <td>
                 @Html.DisplayFor(modelItem => item.EnrollmentDate)
             </td>
+                <td>
+                    @{
+
+                        foreach (Enrollment enrollment in item.Enrollments)
+                        {
+                            @enrollment.Course.Title <br />
+                        }
+
+                    }
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |

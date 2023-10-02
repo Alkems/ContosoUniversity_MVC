@@ -14,9 +14,12 @@ namespace ContosoUniversity.Controllers
             _context = context;
         }
         // get index
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var schoolContext = _context.Departments.Include(d => d.Administrator);
+            var schoolContext = _context.Departments
+                .Include(d => d.Administrator)
+                .Include(d => d.Courses);
             return View(await schoolContext.ToListAsync());
         }
         // get details

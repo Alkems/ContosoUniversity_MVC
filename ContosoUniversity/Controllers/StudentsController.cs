@@ -15,7 +15,13 @@ namespace ContosoUniversityTARpe21.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Students.ToListAsync());
+            var schoolContext = await _context.Students
+                .Include(s => s.Enrollments)
+                .ThenInclude(e => e.Course)
+                .ToListAsync();
+
+            return View(schoolContext);
+
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -37,71 +43,106 @@ namespace ContosoUniversityTARpe21.Controllers
         }
         public IActionResult Create()
         {
+            var student = new Student();
+            student.Enrollments = new List<Enrollment>();
+            PopulateAssignedCourseData(student);
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EnrollmentDate,FirstMidName,LastName")] Student student)
+        public async Task<IActionResult> Create([Bind("EnrollmentDate,FirstMidName,LastName")] Student student, string[] selectedCourses)
         {
-            try
+            if (selectedCourses != null)
             {
-                if (ModelState.IsValid)
+                student.Enrollments = new List<Enrollment>();
+                foreach (var course in selectedCourses)
                 {
-                    _context.Add(student);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                    var courseToAdd = new Enrollment
+                    {
+                        StudentID = student.Id,
+                        CourseID = int.Parse(course)
+                    };
+                    student.Enrollments.Add(courseToAdd);
                 }
             }
-            catch (Exception)
+
+            if (ModelState.IsValid)
             {
-                ModelState.AddModelError("", "Unable to save changes. "
-                    + "Try again, and if the problem persist "
-                    + "see your system administrator.");
+                _context.Add(student);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
+            PopulateAssignedCourseData(student);
             return View(student);
         }
 
-        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            if (id == null || _context.Students == null)
             {
                 return NotFound();
             }
 
-            var student = await _context.Students.FindAsync(id);
+            var student = await _context.Students
+                .Include(s => s.Enrollments)
+                .FirstOrDefaultAsync(s => s.Id == id);
+
             if (student == null)
             {
                 return NotFound();
             }
+
+            if (student.Enrollments == null)
+            {
+                student.Enrollments = new List<Enrollment>();
+            }
+
+            PopulateAssignedCourseData(student);
+
             return View(student);
         }
-        [HttpPost, ActionName("Edit")]
+
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditPost(int? id)
+        public async Task<IActionResult> Edit(int? id, string[] selectedCourses)
         {
             if (id == null)
             {
                 return NotFound();
             }
-            var studentToUpdate = await _context.Students.FirstOrDefaultAsync(s => s.Id == id);
-            if (await TryUpdateModelAsync<Student>(studentToUpdate, "", s => s.FirstMidName,
-                s => s.LastName, s => s.EnrollmentDate))
+            var studentToUpdate = await _context.Students
+                .Include(i => i.Enrollments)
+                .ThenInclude(i => i.Course)
+                .FirstOrDefaultAsync(s => s.Id == id);
+            if (await TryUpdateModelAsync<Student>(studentToUpdate, "",
+                i => i.FirstMidName,
+                i => i.LastName,
+                i => i.EnrollmentDate))
             {
+
+                UpdateStudentCourses(selectedCourses, studentToUpdate);
                 try
                 {
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateException)
                 {
                     ModelState.AddModelError("", "Unable to save changes. " +
-                        "Try again, and if the problem persist " +
-                        "see your system administrator.");
+                            "Try Again, and if the problem persists, " +
+                            "see your system administrator.");
                 }
+                return RedirectToAction(nameof(Index));
             }
-            return View(studentToUpdate);
+            UpdateStudentCourses(selectedCourses, studentToUpdate);
+            PopulateAssignedCourseData(studentToUpdate);
+
+            return View();
+
         }
+
+
+
         public async Task<IActionResult> Delete(int? id, bool? saveChangesError = false)
         {
             if (id == null)
@@ -145,6 +186,53 @@ namespace ContosoUniversityTARpe21.Controllers
 
                 return RedirectToAction(nameof(Delete), new { id = id, saveChangesError = true });
             }
+        }
+
+        private void UpdateStudentCourses(string[] selectedCourses, Student studentToUpdate)
+        {
+            if (selectedCourses == null)
+            {
+                studentToUpdate.Enrollments = new List<Enrollment>();
+                return;
+            }
+            var selectedCoursesHS = new HashSet<string>(selectedCourses);
+            var studentCourses = new HashSet<int>(studentToUpdate.Enrollments.Select(c => c.CourseID));
+            foreach (var course in _context.Courses)
+            {
+                if (selectedCoursesHS.Contains(course.CourseID.ToString()))
+                {
+                    if (!studentCourses.Contains(course.CourseID))
+                    {
+                        studentToUpdate.Enrollments.Add(new Enrollment { StudentID = studentToUpdate.Id, CourseID = course.CourseID });
+                    }
+                    else
+                    {
+                        if (studentCourses.Contains(course.CourseID))
+                        {
+                            Enrollment courseToRemove = studentToUpdate.Enrollments
+                                .FirstOrDefault(e => e.CourseID == course.CourseID);
+                            _context.Remove(courseToRemove);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void PopulateAssignedCourseData(Student student)
+        {
+            var allCourses = _context.Courses;
+            var studentCourses = new HashSet<int>(student.Enrollments.Select(c => c.CourseID));
+            var vm = new List<AssignedCourseData>();
+            foreach (var course in allCourses)
+            {
+                vm.Add(new AssignedCourseData
+                {
+                    CourseID = course.CourseID,
+                    Title = course.Title,
+                    Assigned = studentCourses.Contains(course.CourseID)
+                });
+            }
+            ViewData["Courses"] = vm;
         }
 
     }

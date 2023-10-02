@@ -49,10 +49,10 @@
                                         @:<td>
                                         <input type="checkbox"
                                         name="selectedCourses"
-                                        value="@course.CourseId"
+                                        value="@course.CourseID"
                                         @(Html.Raw(course.Assigned ? "checked=\"checked\"":""))
                                         />
-                                        @course.CourseId @: @course.Title
+                                        @course.CourseID @: @course.Title
                                         @:</td>
                                     }
                                     @:</tr>

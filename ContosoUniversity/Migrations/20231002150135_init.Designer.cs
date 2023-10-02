@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ContosoUniversity.Migrations
 {
     [DbContext(typeof(SchoolContext))]
-    [Migration("20231002135559_init")]
+    [Migration("20231002150135_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,21 +48,16 @@ namespace ContosoUniversity.Migrations
 
             modelBuilder.Entity("ContosoUniversity.Models.CourseAssignment", b =>
                 {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
-
                     b.Property<int>("CourseID")
                         .HasColumnType("int");
 
                     b.Property<int>("InstructorID")
                         .HasColumnType("int");
 
-                    b.HasKey("ID");
+                    b.Property<int>("ID")
+                        .HasColumnType("int");
 
-                    b.HasIndex("CourseID");
+                    b.HasKey("CourseID", "InstructorID");
 
                     b.HasIndex("InstructorID");
 
