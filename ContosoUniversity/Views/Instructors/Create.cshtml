@@ -33,42 +33,38 @@
                 <span asp-validation-for="OfficeAssignment.Location" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <table>
-                        <tr>
-                            @{
-                                int cnt = 0;
-                                List<ContosoUniversity.Models.AssignedCourseData> courses = ViewBag.Courses;
-                                foreach (var course in courses)
-                                {
-                                    if (cnt++ % 3 == 0)
+                    <div class="col-md-offset-2 col-md-10">
+                        <table>
+                            <tr>
+                                @{
+                                    int cnt = 0;
+                                    List<ContosoUniversity.Models.AssignedCourseData> courses = ViewBag.Courses;
+
+                                    foreach (var course in courses)
                                     {
-                                        @:</tr><tr>
+                                        if (cnt++ % 3 == 0)
+                                        {
+                                            @:</tr><tr>
+                                        }
+                                        @:<td>
+                                        <input type="checkbox"
+                                        name="selectedCourses"
+                                        value="@course.CourseId"
+                                        @(Html.Raw(course.Assigned ? "checked=\"checked\"":""))
+                                        />
+                                        @course.CourseId @: @course.Title
+                                        @:</td>
                                     }
-                                    @:<td>
-                                    <input type="checkbox"
-                                    name="selectedCourses"
-                                    value="@course.CourseId"
-                                    @(Html.Raw(course.Assigned ? "checked=\"checked\"":""))
-                                    />
-                                    @course.CourseId @: @course.Title
-                                    @:</td>
+                                    @:</tr>
                                 }
-                            }
-                        </tr>
-                    </table>
+                        </table>
+                    </div>
                 </div>
-            </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary"/>
+                </div>
         </form>
     </div>
 </div>
-
 <div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationsScriptsPartial");
-    }
-}
+    <a asp-a

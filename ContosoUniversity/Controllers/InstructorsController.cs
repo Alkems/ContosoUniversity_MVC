@@ -62,26 +62,36 @@ namespace ContosoUniversity.Controllers
         }
         public IActionResult Create()
         {
+            var instructor = new Instructor();
+            instructor.CourseAssignment = new List<CourseAssignment>();
+            PopulateAssignedCourseData(instructor);
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("HireDate,FirstMidName,LastName")] Instructor instructor)
+        public async Task<IActionResult> Create([Bind("HireDate,FirstMidName,LastName,OfficeAssignment")] Instructor instructor, string[] selectedCourses)
         {
-            try
+            ModelState.Remove("OfficeAssignment.Instructor");
+            if (selectedCourses != null)
             {
-                if (ModelState.IsValid)
+                instructor.CourseAssignment = new List<CourseAssignment>();
+                foreach (var course in selectedCourses)
                 {
-                    _context.Add(instructor);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                    var courseToAdd = new CourseAssignment
+                    {
+                        InstructorID = instructor.Id,
+                        CourseID = int.Parse(course)
+                    };
+                    instructor.CourseAssignment.Add(courseToAdd);
                 }
             }
-            catch (Exception)
+            if (ModelState.IsValid)
             {
-
-                ModelState.AddModelError("", "Unable to save changes. " + "Try again, and if the problem persist " + "see your system administrator.");
+                _context.Add(instructor);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
+            PopulateAssignedCourseData(instructor);
             return View(instructor);
         }
 
@@ -149,6 +159,22 @@ namespace ContosoUniversity.Controllers
             return View();
 
         }
+        [HttpGet]
+        public async Task<IActionResult> Delete(int? id, bool? saveChangesError = false)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var instructor = await _context.Instructors
+                .FirstOrDefaultAsync(s => s.Id == id);
+            if (instructor == null)
+            {
+                return NotFound();
+            }
+
+            return View(instructor);
+        }
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -166,9 +192,9 @@ namespace ContosoUniversity.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-
         }
-        private void UpdateInstructorCourses(string[] selectedCourses, Instructor instructorToUpdate)
+
+            private void UpdateInstructorCourses(string[] selectedCourses, Instructor instructorToUpdate)
         {
             if (selectedCourses == null)
             {
